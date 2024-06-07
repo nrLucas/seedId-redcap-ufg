@@ -107,6 +107,57 @@ export class RedcapService {
         }
     }
 
+    async insertFileREDCap2(recordId: string): Promise<Buffer> {
+        try {
+            const response = await axios.post(
+                this.apiUrl,
+                qs.stringify({
+                    token: this.apiKey,
+                    content: "file",
+                    action: "import",
+                    record: recordId,
+                    field: "imagem_sem_prop_1",
+
+                    returnFormat: "json",
+                }),
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    responseType: "arraybuffer", // Importante para dados binários
+                },
+            );
+            return response.data; // Retorna os dados binários do arquivo
+        } catch (error) {
+            console.error("Error fetching file from REDCap:", error);
+            throw new Error("Failed to fetch file from REDCap");
+        }
+    }
+
+    async insertFileREDCap(recordId: string, file: any): Promise<any> {
+        try {
+            const form = new FormData();
+            form.append("token", this.apiKey);
+            form.append("content", "fileRepository");
+            form.append("action", "import");
+            form.append("record", recordId);
+            form.append("field", "teste1");
+            form.append("file", file);
+            form.append("returnFormat", "json");
+
+            const response = await axios.post(this.apiUrl, form, {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Error uploading file to REDCap:", error);
+            throw new Error("Failed to upload file to REDCap");
+        }
+    }
+
     async insertRecord(data: any): Promise<any> {
         try {
             const response = await axios.post(
@@ -130,6 +181,17 @@ export class RedcapService {
             return response.data;
         } catch (error) {
             console.error("Error sending data to REDCap:", error);
+        }
+    }
+
+    async getMaxRepeatInstance(recordId: string): Promise<number> {
+        try {
+            const records = await this.fetchRecordById(recordId);
+            const maxInstance = Math.max(...records.map((record: any) => record.redcap_repeat_instance || 0));
+            return maxInstance;
+        } catch (error) {
+            console.error("Error fetching max repeat instance:", error);
+            throw new Error("Failed to fetch max repeat instance");
         }
     }
 }

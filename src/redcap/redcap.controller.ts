@@ -1,4 +1,6 @@
-import { Controller, Get, Query, Res, Post, Body } from "@nestjs/common";
+import { Controller, Get, Query, Res, Post, Body, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+
 import { RedcapService } from "./redcap.service";
 import { Response } from "express";
 
@@ -32,11 +34,26 @@ export class RedcapController {
         res.send(imageBuffer);
     }
 
+    @Post("upload-file")
+    @UseInterceptors(FileInterceptor("imagem"))
+    async uploadFile(@Query("recordId") recordId: string, @UploadedFile() file: Express.Multer.File, @Res() res: Response) {
+        try {
+            console.log("file", file);
+            const result = await this.redcapService.insertFileREDCap(recordId, file.buffer);
+            res.send(result);
+        } catch (error) {
+            res.status(500).send({ message: "Failed to upload file", error: error.message });
+        }
+    }
+
     @Post("update-record")
     async createOrUpdateRecord(@Body() recordData: any, @Res() res: Response) {
         try {
-            const result = await this.redcapService.insertRecord(recordData);
-            res.send(result);
+            // Assumindo que o ID do registro está no corpo da solicitação
+            const maxInstance = await this.redcapService.getMaxRepeatInstance("300");
+            console.log("Max Repeat Instance:", maxInstance);
+            // const result = await this.redcapService.insertRecord(recordData);
+            res.send(true);
         } catch (error) {
             res.status(500).send({ message: "Failed to update or create record", error: error.message });
         }
