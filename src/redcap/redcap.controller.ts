@@ -36,10 +36,22 @@ export class RedcapController {
 
     @Post("upload-file")
     @UseInterceptors(FileInterceptor("imagem"))
-    async uploadFile(@Query("recordId") recordId: string, @UploadedFile() file: Express.Multer.File, @Res() res: Response) {
+    async uploadFile(@Query("recordId") recordId: string, @UploadedFile() imagem: Express.Multer.File, @Res() res: Response) {
         try {
-            console.log("file", file);
-            const result = await this.redcapService.insertFileREDCap(recordId, file.buffer);
+            console.log("file2222", imagem);
+            const result = await this.redcapService.insertFileREDCap2(recordId, imagem);
+            res.send(result);
+        } catch (error) {
+            res.status(500).send({ message: "Failed to upload file", error: error.message });
+        }
+    }
+
+    @Post("upload-fileRepository")
+    @UseInterceptors(FileInterceptor("imagem"))
+    async FileRepository(@UploadedFile() imagem: Express.Multer.File, @Res() res: Response) {
+        try {
+            console.log("file", imagem);
+            const result = await this.redcapService.importFileRepository(imagem);
             res.send(result);
         } catch (error) {
             res.status(500).send({ message: "Failed to upload file", error: error.message });
@@ -50,12 +62,22 @@ export class RedcapController {
     async createOrUpdateRecord(@Body() recordData: any, @Res() res: Response) {
         try {
             // Assumindo que o ID do registro está no corpo da solicitação
-            const maxInstance = await this.redcapService.getMaxRepeatInstance("300");
-            console.log("Max Repeat Instance:", maxInstance);
-            // const result = await this.redcapService.insertRecord(recordData);
-            res.send(true);
+            // const maxInstance = await this.redcapService.getMaxRepeatInstance("300");
+            // console.log("Max Repeat Instance:", maxInstance);
+            const result = await this.redcapService.insertRecord(recordData);
+            res.send(result);
         } catch (error) {
             res.status(500).send({ message: "Failed to update or create record", error: error.message });
+        }
+    }
+
+    @Post("list-file-repository")
+    async listFileRepository(@Res() res: Response) {
+        try {
+            const result = await this.redcapService.listFileRepository();
+            res.send(result);
+        } catch (error) {
+            res.status(500).send({ message: "Failed to list file repository", error: error.message });
         }
     }
 }

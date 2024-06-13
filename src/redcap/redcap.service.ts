@@ -107,7 +107,7 @@ export class RedcapService {
         }
     }
 
-    async insertFileREDCap2(recordId: string): Promise<Buffer> {
+    async insertFileREDCap2(recordId: string, file: any): Promise<Buffer> {
         try {
             const response = await axios.post(
                 this.apiUrl,
@@ -117,14 +117,13 @@ export class RedcapService {
                     action: "import",
                     record: recordId,
                     field: "imagem_sem_prop_1",
-
+                    file: file,
                     returnFormat: "json",
                 }),
                 {
                     headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Content-Type": "multipart/form-data",
                     },
-                    responseType: "arraybuffer", // Importante para dados binários
                 },
             );
             return response.data; // Retorna os dados binários do arquivo
@@ -138,10 +137,10 @@ export class RedcapService {
         try {
             const form = new FormData();
             form.append("token", this.apiKey);
-            form.append("content", "fileRepository");
+            form.append("content", "file");
             form.append("action", "import");
             form.append("record", recordId);
-            form.append("field", "teste1");
+            form.append("field", "imagem_sem_prop_1");
             form.append("file", file);
             form.append("returnFormat", "json");
 
@@ -192,6 +191,75 @@ export class RedcapService {
         } catch (error) {
             console.error("Error fetching max repeat instance:", error);
             throw new Error("Failed to fetch max repeat instance");
+        }
+    }
+
+    async listFileRepository(): Promise<any> {
+        try {
+            const response = await axios.post(
+                this.apiUrl,
+                qs.stringify({
+                    token: this.apiKey,
+                    content: "fileRepository",
+                    action: "list",
+                    format: "json",
+                }),
+                {
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                },
+            );
+
+            console.log("response", response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Error listing file repository:", error);
+            throw new Error("Failed to list file repository");
+        }
+    }
+
+    async importFileRepository(file: any): Promise<any> {
+        try {
+            // const form = new FormData();
+            // form.append("token", this.apiKey);
+            // form.append("content", "fileRepository");
+            // form.append("action", "import");
+            // form.append("file", file);
+            // form.append("returnFormat", "json");
+            // form.append("folder_id", "4");
+
+            // const response = await axios.post(this.apiUrl, form, {
+            //     headers: {
+            //         "Content-Type": "application/x-www-form-urlencoded",
+            //     },
+            // });
+
+            // return response.data;
+
+            console.log("FILE", file);
+            const response = await axios.post(
+                this.apiUrl,
+                qs.stringify({
+                    token: this.apiKey,
+                    content: "fileRepository",
+                    action: "import",
+                    file: file,
+                    folder_id: 4,
+
+                    returnFormat: "json",
+                    // data: JSON.stringify([data]), // Adiciona os dados como uma string JSON
+                }),
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                },
+            );
+            return response.data;
+        } catch (error) {
+            console.error("Error listing file repository:", error);
+            throw new Error("Failed to list file repository");
         }
     }
 }
