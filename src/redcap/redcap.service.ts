@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import axios from "axios";
 import * as qs from "qs";
+import * as fs from "fs";
 
 @Injectable()
 export class RedcapService {
@@ -69,6 +70,7 @@ export class RedcapService {
                 {
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
+                        // "Content-Type": "multipart/form-data",
                     },
                 },
             );
@@ -237,14 +239,19 @@ export class RedcapService {
 
             // return response.data;
 
-            console.log("FILE", file);
+            // console.log("FILE", file);
+            // const fileBase64 = file.buffer.toString("base64");
+            // console.log("fileBase64", fileBase64);
+
+            const file2 = fs.createReadStream("C:\\Users\\gusta\\Downloads\\semente.jpg");
+            console.log("file", file2);
             const response = await axios.post(
                 this.apiUrl,
                 qs.stringify({
                     token: this.apiKey,
                     content: "fileRepository",
                     action: "import",
-                    file: file,
+                    file: "semente.jpg",
                     folder_id: 4,
 
                     returnFormat: "json",
@@ -252,7 +259,8 @@ export class RedcapService {
                 }),
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data",
+                        //"Content-Type": "image/jpeg",
+                        "Content-Type": "application/x-www-form-urlencoded",
                     },
                 },
             );
@@ -260,6 +268,37 @@ export class RedcapService {
         } catch (error) {
             console.error("Error listing file repository:", error);
             throw new Error("Failed to list file repository");
+        }
+    }
+
+    async importFile(recordId: string, fieldName: string, file: any, event?: string, repeat_instance: number = 1): Promise<any> {
+        try {
+            // Convert the file buffer to a base64 string
+
+            console.log("file", file);
+            const fileBase64 = file.buffer.toString("base64");
+
+            const data = {
+                token: this.apiKey,
+                content: "file",
+                action: "import",
+                record: recordId,
+                field: fieldName,
+                file: JSON.stringify([file]),
+                repeat_instance: 1,
+                returnFormat: "json",
+            };
+
+            const response = await axios.post(this.apiUrl, qs.stringify(data), {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error("Error uploading file to REDCap:", error);
+            throw new Error("Failed to upload file to REDCap");
         }
     }
 }

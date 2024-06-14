@@ -80,6 +80,25 @@ export class RedcapController {
             res.status(500).send({ message: "Failed to list file repository", error: error.message });
         }
     }
+
+    @Post("upload-file2")
+    @UseInterceptors(FileInterceptor("imagem"))
+    async uploadFile2(
+        @Query("recordId") recordId: string,
+        @Query("fieldName") fieldName: string,
+        @Query("event") event: string,
+        @Query("repeat_instance") repeat_instance: number = 1,
+        @UploadedFile() imagem: Express.Multer.File,
+        @Res() res: Response,
+    ) {
+        try {
+            console.log("weerwrwe", imagem);
+            const result = await this.redcapService.importFile(recordId, fieldName, imagem, event, repeat_instance);
+            res.send(result);
+        } catch (error) {
+            res.status(500).send({ message: "Failed to upload file", error: error.message });
+        }
+    }
 }
 
 // const teste = {
