@@ -1,5 +1,5 @@
-import { Controller, Get, Query, Res, Post, Body, UploadedFile, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { Controller, Get, Query, Res, Post } from "@nestjs/common";
+// import { FileInterceptor } from "@nestjs/platform-express";UploadedFile, UseInterceptors
 
 import { RedcapService } from "./redcap.service";
 import { Response } from "express";
@@ -34,42 +34,42 @@ export class RedcapController {
         res.send(imageBuffer);
     }
 
-    @Post("upload-file")
-    @UseInterceptors(FileInterceptor("imagem"))
-    async uploadFile(@Query("recordId") recordId: string, @UploadedFile() imagem: Express.Multer.File, @Res() res: Response) {
-        try {
-            console.log("file2222", imagem);
-            const result = await this.redcapService.insertFileREDCap2(recordId, imagem);
-            res.send(result);
-        } catch (error) {
-            res.status(500).send({ message: "Failed to upload file", error: error.message });
-        }
-    }
+    // @Post("upload-file")
+    // @UseInterceptors(FileInterceptor("imagem"))
+    // async uploadFile(@Query("recordId") recordId: string, @UploadedFile() imagem: Express.Multer.File, @Res() res: Response) {
+    //     try {
+    //         console.log("file2222", imagem);
+    //         const result = await this.redcapService.insertFileREDCap2(recordId, imagem);
+    //         res.send(result);
+    //     } catch (error) {
+    //         res.status(500).send({ message: "Failed to upload file", error: error.message });
+    //     }
+    // }
 
-    @Post("upload-fileRepository")
-    @UseInterceptors(FileInterceptor("imagem"))
-    async FileRepository(@UploadedFile() imagem: Express.Multer.File, @Res() res: Response) {
-        try {
-            console.log("file", imagem);
-            const result = await this.redcapService.importFileRepository(imagem);
-            res.send(result);
-        } catch (error) {
-            res.status(500).send({ message: "Failed to upload file", error: error.message });
-        }
-    }
+    // @Post("upload-fileRepository")
+    // @UseInterceptors(FileInterceptor("imagem"))
+    // async FileRepository(@UploadedFile() imagem: Express.Multer.File, @Res() res: Response) {
+    //     try {
+    //         console.log("file", imagem);
+    //         const result = await this.redcapService.importFileRepository(imagem);
+    //         res.send(result);
+    //     } catch (error) {
+    //         res.status(500).send({ message: "Failed to upload file", error: error.message });
+    //     }
+    // }
 
-    @Post("update-record")
-    async createOrUpdateRecord(@Body() recordData: any, @Res() res: Response) {
-        try {
-            // Assumindo que o ID do registro está no corpo da solicitação
-            // const maxInstance = await this.redcapService.getMaxRepeatInstance("300");
-            // console.log("Max Repeat Instance:", maxInstance);
-            const result = await this.redcapService.insertRecord(recordData);
-            res.send(result);
-        } catch (error) {
-            res.status(500).send({ message: "Failed to update or create record", error: error.message });
-        }
-    }
+    // @Post("update-record")
+    // async createOrUpdateRecord(@Body() recordData: any, @Res() res: Response) {
+    //     try {
+    //         // Assumindo que o ID do registro está no corpo da solicitação
+    //         // const maxInstance = await this.redcapService.getMaxRepeatInstance("300");
+    //         // console.log("Max Repeat Instance:", maxInstance);
+    //         const result = await this.redcapService.insertRecord(recordData);
+    //         res.send(result);
+    //     } catch (error) {
+    //         res.status(500).send({ message: "Failed to update or create record", error: error.message });
+    //     }
+    // }
 
     @Post("list-file-repository")
     async listFileRepository(@Res() res: Response) {
@@ -81,24 +81,24 @@ export class RedcapController {
         }
     }
 
-    @Post("upload-file2")
-    @UseInterceptors(FileInterceptor("imagem"))
-    async uploadFile2(
-        @Query("recordId") recordId: string,
-        @Query("fieldName") fieldName: string,
-        @Query("event") event: string,
-        @Query("repeat_instance") repeat_instance: number = 1,
-        @UploadedFile() imagem: Express.Multer.File,
-        @Res() res: Response,
-    ) {
-        try {
-            console.log("weerwrwe", imagem);
-            const result = await this.redcapService.importFile(recordId, fieldName, imagem, event, repeat_instance);
-            res.send(result);
-        } catch (error) {
-            res.status(500).send({ message: "Failed to upload file", error: error.message });
-        }
-    }
+    // @Post("upload-file2")
+    // @UseInterceptors(FileInterceptor("imagem"))
+    // async uploadFile2(
+    //     @Query("recordId") recordId: string,
+    //     @Query("fieldName") fieldName: string,
+    //     @Query("event") event: string,
+    //     @Query("repeat_instance") repeat_instance: number = 1,
+    //     @UploadedFile() imagem: Express.Multer.File,
+    //     @Res() res: Response,
+    // ) {
+    //     try {
+    //         console.log("weerwrwe", imagem);
+    //         const result = await this.redcapService.importFile(recordId, fieldName, imagem, event, repeat_instance);
+    //         res.send(result);
+    //     } catch (error) {
+    //         res.status(500).send({ message: "Failed to upload file", error: error.message });
+    //     }
+    // }
 }
 
 // const teste = {

@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import axios from "axios";
 import * as qs from "qs";
-import * as fs from "fs";
 
 @Injectable()
 export class RedcapService {
@@ -109,81 +108,31 @@ export class RedcapService {
         }
     }
 
-    async insertFileREDCap2(recordId: string, file: any): Promise<Buffer> {
-        try {
-            const response = await axios.post(
-                this.apiUrl,
-                qs.stringify({
-                    token: this.apiKey,
-                    content: "file",
-                    action: "import",
-                    record: recordId,
-                    field: "imagem_sem_prop_1",
-                    file: file,
-                    returnFormat: "json",
-                }),
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                },
-            );
-            return response.data; // Retorna os dados binários do arquivo
-        } catch (error) {
-            console.error("Error fetching file from REDCap:", error);
-            throw new Error("Failed to fetch file from REDCap");
-        }
-    }
+    // async insertRecord(data: any): Promise<any> {
+    //     try {
+    //         const response = await axios.post(
+    //             this.apiUrl,
+    //             qs.stringify({
+    //                 token: this.apiKey,
+    //                 content: "record",
+    //                 format: "json",
+    //                 returnFormat: "json",
+    //                 type: "flat",
+    //                 data: JSON.stringify([data]), // Adiciona os dados como uma string JSON
+    //             }),
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "application/x-www-form-urlencoded",
+    //                 },
+    //             },
+    //         );
 
-    async insertFileREDCap(recordId: string, file: any): Promise<any> {
-        try {
-            const form = new FormData();
-            form.append("token", this.apiKey);
-            form.append("content", "file");
-            form.append("action", "import");
-            form.append("record", recordId);
-            form.append("field", "imagem_sem_prop_1");
-            form.append("file", file);
-            form.append("returnFormat", "json");
-
-            const response = await axios.post(this.apiUrl, form, {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-            });
-
-            return response.data;
-        } catch (error) {
-            console.error("Error uploading file to REDCap:", error);
-            throw new Error("Failed to upload file to REDCap");
-        }
-    }
-
-    async insertRecord(data: any): Promise<any> {
-        try {
-            const response = await axios.post(
-                this.apiUrl,
-                qs.stringify({
-                    token: this.apiKey,
-                    content: "record",
-                    format: "json",
-                    returnFormat: "json",
-                    type: "flat",
-                    data: JSON.stringify([data]), // Adiciona os dados como uma string JSON
-                }),
-                {
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                },
-            );
-
-            console.log("Response", response.data);
-            return response.data;
-        } catch (error) {
-            console.error("Error sending data to REDCap:", error);
-        }
-    }
+    //         console.log("Response", response.data);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Error sending data to REDCap:", error);
+    //     }
+    // }
 
     async getMaxRepeatInstance(recordId: string): Promise<number> {
         try {
@@ -221,86 +170,135 @@ export class RedcapService {
         }
     }
 
-    async importFileRepository(file: any): Promise<any> {
-        try {
-            // const form = new FormData();
-            // form.append("token", this.apiKey);
-            // form.append("content", "fileRepository");
-            // form.append("action", "import");
-            // form.append("file", file);
-            // form.append("returnFormat", "json");
-            // form.append("folder_id", "4");
+    // async insertFileREDCap2(recordId: string, file: any): Promise<Buffer> {
+    //     try {
+    //         const response = await axios.post(
+    //             this.apiUrl,
+    //             qs.stringify({
+    //                 token: this.apiKey,
+    //                 content: "file",
+    //                 action: "import",
+    //                 record: recordId,
+    //                 field: "imagem_sem_prop_1",
+    //                 file: file,
+    //                 returnFormat: "json",
+    //             }),
+    //             {
+    //                 headers: {
+    //                     "Content-Type": "multipart/form-data",
+    //                 },
+    //             },
+    //         );
+    //         return response.data; // Retorna os dados binários do arquivo
+    //     } catch (error) {
+    //         console.error("Error fetching file from REDCap:", error);
+    //         throw new Error("Failed to fetch file from REDCap");
+    //     }
+    // }
 
-            // const response = await axios.post(this.apiUrl, form, {
-            //     headers: {
-            //         "Content-Type": "application/x-www-form-urlencoded",
-            //     },
-            // });
+    // async insertFileREDCap(recordId: string, file: any): Promise<any> {
+    //     try {
+    //         const form = new FormData();
+    //         form.append("token", this.apiKey);
+    //         form.append("content", "file");
+    //         form.append("action", "import");
+    //         form.append("record", recordId);
+    //         form.append("field", "imagem_sem_prop_1");
+    //         form.append("file", file);
+    //         form.append("returnFormat", "json");
 
-            // return response.data;
+    //         const response = await axios.post(this.apiUrl, form, {
+    //             headers: {
+    //                 "Content-Type": "application/x-www-form-urlencoded",
+    //             },
+    //         });
 
-            // console.log("FILE", file);
-            // const fileBase64 = file.buffer.toString("base64");
-            // console.log("fileBase64", fileBase64);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Error uploading file to REDCap:", error);
+    //         throw new Error("Failed to upload file to REDCap");
+    //     }
+    // }
+    // async importFileRepository(file: any): Promise<any> {
+    //     try {
+    //         // const form = new FormData();
+    //         // form.append("token", this.apiKey);
+    //         // form.append("content", "fileRepository");
+    //         // form.append("action", "import");
+    //         // form.append("file", file);
+    //         // form.append("returnFormat", "json");
+    //         // form.append("folder_id", "4");
 
-            const file2 = fs.createReadStream("C:\\Users\\gusta\\Downloads\\semente.jpg");
-            console.log("file", file2);
-            const response = await axios.post(
-                this.apiUrl,
-                qs.stringify({
-                    token: this.apiKey,
-                    content: "fileRepository",
-                    action: "import",
-                    file: "semente.jpg",
-                    folder_id: 4,
+    //         // const response = await axios.post(this.apiUrl, form, {
+    //         //     headers: {
+    //         //         "Content-Type": "application/x-www-form-urlencoded",
+    //         //     },
+    //         // });
 
-                    returnFormat: "json",
-                    // data: JSON.stringify([data]), // Adiciona os dados como uma string JSON
-                }),
-                {
-                    headers: {
-                        //"Content-Type": "image/jpeg",
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                },
-            );
-            return response.data;
-        } catch (error) {
-            console.error("Error listing file repository:", error);
-            throw new Error("Failed to list file repository");
-        }
-    }
+    //         // return response.data;
 
-    async importFile(recordId: string, fieldName: string, file: any, event?: string, repeat_instance: number = 1): Promise<any> {
-        try {
-            // Convert the file buffer to a base64 string
+    //         // console.log("FILE", file);
+    //         // const fileBase64 = file.buffer.toString("base64");
+    //         // console.log("fileBase64", fileBase64);
 
-            console.log("file", file);
-            const fileBase64 = file.buffer.toString("base64");
+    //         const file2 = fs.createReadStream("C:\\Users\\gusta\\Downloads\\semente.jpg");
+    //         console.log("file", file2);
+    //         const response = await axios.post(
+    //             this.apiUrl,
+    //             qs.stringify({
+    //                 token: this.apiKey,
+    //                 content: "fileRepository",
+    //                 action: "import",
+    //                 file: "semente.jpg",
+    //                 folder_id: 4,
 
-            const data = {
-                token: this.apiKey,
-                content: "file",
-                action: "import",
-                record: recordId,
-                field: fieldName,
-                file: JSON.stringify([file]),
-                repeat_instance: 1,
-                returnFormat: "json",
-            };
+    //                 returnFormat: "json",
+    //                 // data: JSON.stringify([data]), // Adiciona os dados como uma string JSON
+    //             }),
+    //             {
+    //                 headers: {
+    //                     //"Content-Type": "image/jpeg",
+    //                     "Content-Type": "application/x-www-form-urlencoded",
+    //                 },
+    //             },
+    //         );
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Error listing file repository:", error);
+    //         throw new Error("Failed to list file repository");
+    //     }
+    // }
 
-            const response = await axios.post(this.apiUrl, qs.stringify(data), {
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-            });
+    // async importFile(recordId: string, fieldName: string, file: any, event?: string, repeat_instance: number = 1): Promise<any> {
+    //     try {
+    //         // Convert the file buffer to a base64 string
 
-            return response.data;
-        } catch (error) {
-            console.error("Error uploading file to REDCap:", error);
-            throw new Error("Failed to upload file to REDCap");
-        }
-    }
+    //         console.log("file", file);
+    //         const fileBase64 = file.buffer.toString("base64");
+
+    //         const data = {
+    //             token: this.apiKey,
+    //             content: "file",
+    //             action: "import",
+    //             record: recordId,
+    //             field: fieldName,
+    //             file: JSON.stringify([file]),
+    //             repeat_instance: 1,
+    //             returnFormat: "json",
+    //         };
+
+    //         const response = await axios.post(this.apiUrl, qs.stringify(data), {
+    //             headers: {
+    //                 "Content-Type": "application/x-www-form-urlencoded",
+    //             },
+    //         });
+
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Error uploading file to REDCap:", error);
+    //         throw new Error("Failed to upload file to REDCap");
+    //     }
+    // }
 }
 
 // {
