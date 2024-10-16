@@ -36,6 +36,9 @@ export class StorageService {
         const uniqueId = uuidv4();
         const date = moment().format("YYYY-MM-DD");
 
+        console.log("classUser", classUser);
+        console.log("subclassUser", subclassUser);
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             const filename = `${uniqueId}-${classUser}-${i + 1}.png`;
