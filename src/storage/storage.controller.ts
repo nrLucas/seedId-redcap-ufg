@@ -1,7 +1,7 @@
 import { Controller, Post, UploadedFiles, UseInterceptors, Body, BadRequestException } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
-import { diskStorage } from "multer";
-import { extname } from "path";
+// import { diskStorage } from "multer";
+// import { extname } from "path";
 import { StorageService } from "./storage.service";
 
 @Controller("storage")

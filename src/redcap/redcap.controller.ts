@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Res, Post } from "@nestjs/common";
+import { Controller, Get, Query, Res } from "@nestjs/common";
 // import { FileInterceptor } from "@nestjs/platform-express";UploadedFile, UseInterceptors
 
 import { RedcapService } from "./redcap.service";
@@ -71,15 +71,15 @@ export class RedcapController {
     //     }
     // }
 
-    @Post("list-file-repository")
-    async listFileRepository(@Res() res: Response) {
-        try {
-            const result = await this.redcapService.listFileRepository();
-            res.send(result);
-        } catch (error) {
-            res.status(500).send({ message: "Failed to list file repository", error: error.message });
-        }
-    }
+    // @Post("list-file-repository")
+    // async listFileRepository(@Res() res: Response) {
+    //     try {
+    //         const result = await this.redcapService.listFileRepository();
+    //         res.send(result);
+    //     } catch (error) {
+    //         res.status(500).send({ message: "Failed to list file repository", error: error.message });
+    //     }
+    // }
 
     // @Post("upload-file2")
     // @UseInterceptors(FileInterceptor("imagem"))
