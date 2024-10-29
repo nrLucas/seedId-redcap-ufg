@@ -27,8 +27,8 @@ export class StorageController {
         try {
             const { nomeUser, classUser, email, latitude, longitude } = body;
 
-            // console.log("body", body);
-            // console.log("Arquivos:", files);
+            console.log("body", body);
+            console.log("Arquivos:", files);
 
             // Salvar metadados no CSV
             await this.storageService.saveMetadataAndImages(nomeUser, classUser, email, latitude, longitude, files);
