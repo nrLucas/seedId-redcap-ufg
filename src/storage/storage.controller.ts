@@ -25,12 +25,13 @@ export class StorageController {
     @UseInterceptors(FilesInterceptor("images"))
     async uploadFiles(@UploadedFiles() files: Express.Multer.File[], @Body() body) {
         try {
-            const { classUser, subclassUser } = body;
-            console.log("Classificação:", classUser, subclassUser);
-            console.log("Arquivos:", files);
+            const { nomeUser, classUser, email, latitude, longitude } = body;
+
+            // console.log("body", body);
+            // console.log("Arquivos:", files);
 
             // Salvar metadados no CSV
-            await this.storageService.saveMetadataAndImages(classUser, subclassUser, files);
+            await this.storageService.saveMetadataAndImages(nomeUser, classUser, email, latitude, longitude, files);
 
             return { success: true, message: "Files uploaded successfully", files };
         } catch (error) {

@@ -31,13 +31,23 @@ export class StorageService {
         }
     }
 
-    async saveMetadataAndImages(classUser: string, subclassUser: string, files: Express.Multer.File[]): Promise<void> {
+    async saveMetadataAndImages(
+        nomeUser: string,
+        classUser: string,
+        // subclassUser: string,
+        email: string,
+        latitude: string,
+        longitude: string,
+        files: Express.Multer.File[],
+    ): Promise<void> {
         const records = [];
         const uniqueId = uuidv4();
         const date = moment().format("YYYY-MM-DD");
 
-        console.log("classUser", classUser);
-        console.log("subclassUser", subclassUser);
+        // console.log("classUser", classUser);
+        // console.log("email", email);
+        // console.log("latitude", latitude);
+        // console.log("longitude", longitude);
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -53,7 +63,7 @@ export class StorageService {
             }
 
             // Prepare CSV record
-            records.push({ uniqueId, classUser, subclassUser, date });
+            records.push({ uniqueId, nomeUser, classUser, email, latitude, longitude, date });
         }
 
         // Append metadata to CSV file
@@ -61,8 +71,11 @@ export class StorageService {
             path: this.metadataFilePath,
             header: [
                 { id: "uniqueId", title: "UniqueId" },
+                { id: "nomeUser", title: "NomeUser" },
                 { id: "classUser", title: "ClassUser" },
-                { id: "subclassUser", title: "SubclassUser" },
+                { id: "email", title: "Email" },
+                { id: "latitude", title: "Latitude" },
+                { id: "longitude", title: "longitude" },
                 { id: "date", title: "Date" },
             ],
             append: true,
