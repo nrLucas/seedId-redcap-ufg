@@ -7,8 +7,14 @@ import * as moment from "moment";
 
 @Injectable()
 export class StorageService {
-    private readonly metadataFilePath = path.join("C:\\Users\\gusta\\OneDrive\\Documentos\\Lucas\\Sementes\\seedId-redcap-ufg\\", "storage", "metadata.csv");
-    private readonly imagesFolderPath = path.join("C:\\Users\\gusta\\OneDrive\\Documentos\\Lucas\\Sementes\\seedId-redcap-ufg\\", "storage", "images");
+    // private readonly metadataFilePath = path.join("C:\\Users\\gusta\\OneDrive\\Documentos\\Lucas\\Sementes\\seedId-redcap-ufg\\", "storage", "metadata.csv");
+    // private readonly imagesFolderPath = path.join("C:\\Users\\gusta\\OneDrive\\Documentos\\Lucas\\Sementes\\seedId-redcap-ufg\\", "storage", "images");
+
+    // /home/suporte/backend_sementes/seedId-redcap-ufg
+
+    private readonly metadataFilePath = path.join("/home/suporte/backend_sementes/seedId-redcap-ufg", "storage", "metadata.csv");
+
+    private readonly imagesFolderPath = path.join("/home/suporte/backend_sementes/seedId-redcap-ufg", "storage", "images");
 
     constructor() {
         // Create directories if they don't exist
